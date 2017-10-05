@@ -194,7 +194,7 @@ class FileManager(object):
         """prepare content to send to NGL
         """
         if self.use_filename and not force_buffer:
-            return os.path.relpath(self.src)
+            return open(os.path.relpath(self.src), 'r').read()
         else:
             if self.compressed_ext:
                 return self.unzip_backend[self.compressed_ext].open(

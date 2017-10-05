@@ -36,7 +36,7 @@ _EXCLUDED_CALLBACK_AFTER_FIRING = {
 
 
 import logging
-
+import os
 def _deprecated(msg):
     def wrap_1(func):
         def wrap_2(*args, **kwargs):
@@ -1165,12 +1165,14 @@ class NGLWidget(DOMWidget):
                 passing_buffer = True
                 binary = False
             else:
+                # TODO find out if this case means that we can only have a string
                 fh = FileManager(
                     obj,
                     ext=kwargs.get('ext'),
                     compressed=kwargs.get('compressed'))
                 # assume passing string
                 blob = fh.read()
+
                 passing_buffer = not fh.use_filename
 
                 if fh.ext is None and passing_buffer:
@@ -1193,6 +1195,15 @@ class NGLWidget(DOMWidget):
 
         name = py_utils.get_name(obj, kwargs2)
         self._ngl_component_names.append(name)
+        # For debugging
+        for key, val in args[0].items():
+            if key != 'data':
+                print(key, val)
+            else:
+                print("data length", len(val))
+                print("data head (first 500 chars):")
+                print(val[:500])
+
         self._remote_call(
             "loadFile", target='Stage', args=args, kwargs=kwargs2)
 
